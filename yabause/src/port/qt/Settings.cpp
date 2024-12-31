@@ -48,7 +48,7 @@ QString getDataDirPath()
 }
 
 QString getIniFile( const QString& s )
-{
+{	
 #if defined Q_OS_MAC
 	return QString( "%1/../%2.ini" ).arg( QApplication::applicationDirPath() ).arg( s );
 #elif defined Q_OS_WIN
@@ -60,6 +60,12 @@ QString getIniFile( const QString& s )
 
 	return QString( "%1/%2.ini" ).arg( getDataDirPath() ).arg(s);
 #else
+	// Check a defined environment variable for settint the configuration folder 
+	QString customConfigDir = qgetenv("KRONOS_CONFIG_DIR");
+	if (!customConfigDir.isEmpty()) {
+        	return QString("%1/%2.ini").arg(customConfigDir).arg(s);
+    	}
+	
 	/*
 	We used to store the ini file in ~/.$SOMETHING/$SOMETHING.ini, were $SOMETHING could
 	be at least yabause or yabause-qt
