@@ -39,8 +39,13 @@ jobs:
               ls
             "
         
-      - name: Upload built artifacts
+      - name: Compress the output directory
+        run: |
+          # Compress the 'out' directory into a .tar.gz archive
+          tar -czvf out.tar.gz -C out .
+
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: kronos
-          path: ./out/
+          name: build-artifacts
+          path: out.tar.gz  # Upload the compressed tarball
