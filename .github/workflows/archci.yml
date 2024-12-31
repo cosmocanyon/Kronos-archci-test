@@ -30,13 +30,15 @@ jobs:
                 openal \
                 sdl2 \
                 glu &&
-              mkdir build &&
-              cmake -G Ninja -S ./yabause -B ./build &&
-              ninja -C ./build 
+              mkdir build && mkdir out &&
+              cmake -G Ninja -S ./yabause -B ./build \
+                -DCMAKE_INSTALL_PREFIX="./out" \
+              &&
+              ninja -C ./build && ninja -C ./build install
             "
         
       - name: Upload built artifacts
         uses: actions/upload-artifact@v4
         with:
           name: kronos
-          path: ./build
+          path: ./out
