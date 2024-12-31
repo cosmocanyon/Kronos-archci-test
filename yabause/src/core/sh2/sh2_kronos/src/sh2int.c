@@ -339,12 +339,6 @@ static void outOfInt(SH2_struct *context) {
   executeLastPC(context);
 }
 
-int SH2KronosInterpreterDebugInit(void)
-{
-  int ret = SH2KronosInterpreterInit();
-  SH2SetExecSet(1);
-  return ret;
-}
 int SH2KronosInterpreterInit(void)
 {
 
@@ -443,6 +437,13 @@ int SH2KronosInterpreterInit(void)
    MSH2->isDelayed = SSH2->isDelayed = 0;
 
    return 0;
+}
+
+int SH2KronosInterpreterDebugInit(void)
+{
+  int ret = SH2KronosInterpreterInit();
+  SH2SetExecSet(1);
+  return ret;
 }
 
 //////////////////////////////////////////////////////////////////////////////
