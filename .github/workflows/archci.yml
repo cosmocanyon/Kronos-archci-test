@@ -26,7 +26,6 @@ jobs:
               pacman -Syu --noconfirm &&
               pacman -S --noconfirm cmake ninja git &&
               mkdir build &&
-              cd build &&
-              cmake -G Ninja .. &&
-              ninja  
+              cmake -G Ninja -S ./yabause -B ./build &&
+              ninja -C ./build 
             "
