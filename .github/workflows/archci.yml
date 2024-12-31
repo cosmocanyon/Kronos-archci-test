@@ -33,10 +33,12 @@ jobs:
               mkdir build && mkdir out &&
               cmake -G Ninja -S ./yabause -B ./build \
                 -DCMAKE_INSTALL_PREFIX="./out" \
+                -DCMAKE_BUILD_TYPE=Release \
+                -DYAB_USE_QT5=ON \
               &&
               ninja -C ./build && ninja -C ./build install
             "
-        
+            
 #      - name: Compress the output directory
 #        run: |
 #          # Compress the 'out' directory into a .tar.gz archive
@@ -48,9 +50,9 @@ jobs:
 #          name: build-artifacts
 #          path: out.tar.gz  # Upload the compressed tarball
 
-      - name: Upload build artifact (install output directory)
+      - name: Upload build artifact
         uses: actions/upload-artifact@v3
         with:
-          name: build-artifacts  # Name of the artifact
-          path: ./out/  # Upload the 'out' directory as the artifact
+          name: kronos-artifact 
+          path: ./out/ 
 
