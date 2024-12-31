@@ -1,4 +1,32 @@
 on:
+  workflow_dispatch:
   push:
     branches:
     - extui-align
+  pull_request:
+    branches:
+    - extui-align
+
+jobs:
+  build:
+    name: deploy standalone build for arch-linux
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Docker for Arch
+        run: |
+          docker pull archlinux:base-devel
+          docker run --rn \
+            -v $PWD:/workspace \
+            -w /workspace \
+            archlinux:base-devel bash -c "
+              pacman -Syu --noconfirm &&
+              pacman -S --noconfirm cmake ninja git &&
+              mkdir build &&
+              cd build &&
+              cmake -G Ninja .. &&
+              ninja  
+            "
