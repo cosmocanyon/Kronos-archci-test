@@ -36,10 +36,11 @@ jobs:
                 -DCMAKE_INSTALL_PREFIX="./out" \
               &&
               ninja -C ./build && ninja -C ./build install
+              ls
             "
         
       - name: Upload built artifacts
         uses: actions/upload-artifact@v4
         with:
           name: kronos
-          path: /workspace/out/
+          path: ./out/
