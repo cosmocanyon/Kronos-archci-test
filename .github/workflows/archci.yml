@@ -51,7 +51,7 @@ jobs:
 #          path: out.tar.gz  # Upload the compressed tarball
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: kronos-artifact 
           path: ./out/ 
