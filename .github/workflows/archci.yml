@@ -28,7 +28,8 @@ jobs:
                 qt5-base \
                 qt5-multimedia \
                 openal \
-                sdl2 &&
+                sdl2 \
+                glu &&
               mkdir build &&
               cmake -G Ninja -S ./yabause -B ./build &&
               ninja -C ./build 
