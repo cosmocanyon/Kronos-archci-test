@@ -29,7 +29,8 @@ jobs:
                 qt5-multimedia \
                 openal \
                 sdl2 \
-                glu &&
+                glu \
+                stb &&
               mkdir build && mkdir out &&
               cmake -G Ninja -S ./yabause -B ./build \
                 -DCMAKE_INSTALL_PREFIX="./out" \
