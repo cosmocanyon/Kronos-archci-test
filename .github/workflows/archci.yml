@@ -37,13 +37,20 @@ jobs:
               ninja -C ./build && ninja -C ./build install
             "
         
-      - name: Compress the output directory
-        run: |
-          # Compress the 'out' directory into a .tar.gz archive
-          tar -czvf out.tar.gz -C ./out .
+#      - name: Compress the output directory
+#        run: |
+#          # Compress the 'out' directory into a .tar.gz archive
+#          tar -czvf out.tar.gz -C ./out .
 
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+#      - name: Upload build artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: build-artifacts
+#          path: out.tar.gz  # Upload the compressed tarball
+
+      - name: Upload build artifact (install output directory)
+        uses: actions/upload-artifact@v3
         with:
-          name: build-artifacts
-          path: out.tar.gz  # Upload the compressed tarball
+          name: build-artifacts  # Name of the artifact
+          path: ./out/  # Upload the 'out' directory as the artifact
+
