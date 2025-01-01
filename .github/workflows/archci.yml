@@ -24,7 +24,9 @@ jobs:
             -w /workspace \
             archlinux:base-devel bash -c "
               pacman -Syu --noconfirm &&
-              pacman -S --noconfirm cmake ninja git \
+              pacman -S --noconfirm \
+                cmake \
+                ninja \
                 qt5-base \
                 qt5-multimedia \
                 openal \
