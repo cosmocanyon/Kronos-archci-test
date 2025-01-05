@@ -45,7 +45,7 @@ jobs:
             -v $PWD:/workspace \
             -v $PWD/build:/workspace/build \
             -w /workspace \
-            --user $(id -u):$(id -g)
+            --user $(id -u):$(id -g) \
             archlinux:base-devel bash -c "
               pacman -Syu --noconfirm &&
               pacman -S --noconfirm \
