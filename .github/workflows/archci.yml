@@ -56,7 +56,6 @@ jobs:
               &&
               ninja -C ./build && ninja -C ./build install
 
-              touch ./build/test.txt
             "
 
       # Step 4: Check if the build directory was populated (this step is just for debugging)
