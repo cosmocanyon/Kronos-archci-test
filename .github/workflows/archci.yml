@@ -55,7 +55,6 @@ jobs:
                 -DYAB_USE_QT5=ON \
               &&
               ninja -C ./build && ninja -C ./build install
-
             "
 
       # Step 4: Check if the build directory was populated (this step is just for debugging)
