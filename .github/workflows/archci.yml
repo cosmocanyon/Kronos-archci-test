@@ -16,6 +16,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Cache Docker image to speed up builds
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/docker
+          key: ${{ runner.os }}-archlinux-base-devel
+          restore-keys: |
+            ${{ runner.os }}-archlinux-base-devel
+            
       - name: Docker for Arch
         run: |
           docker pull archlinux:base-devel
