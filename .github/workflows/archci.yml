@@ -29,6 +29,13 @@ jobs:
           key: ${{ runner.os }}-kronos-build-${{ hashFiles('**/*.cpp', '**/*.h', '**/CMakeLists.txt') }}
           restore-keys: |
             ${{ runner.os }}-kronos-build-
+      
+      - name: Fix permissions for build directory (after cache restore)
+        run: |
+          sudo chown -R runner:docker ./build  # Ensure the runner has access to build files
+          sudo chmod -R 755 ./build            # Ensure the directory and files are readable and writable
+
+          
 
       # Step 3: Docker for Arch - Build Process
       - name: Docker for Arch
@@ -38,6 +45,7 @@ jobs:
             -v $PWD:/workspace \
             -v $PWD/build:/workspace/build \
             -w /workspace \
+            --user $(id -u):$(id -g)
             archlinux:base-devel bash -c "
               pacman -Syu --noconfirm &&
               pacman -S --noconfirm \
