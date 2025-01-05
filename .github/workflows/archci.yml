@@ -32,10 +32,8 @@ jobs:
       
       - name: Fix permissions for build directory (after cache restore)
         run: |
-          sudo chown -R runner:docker ./build  # Ensure the runner has access to build files
+          sudo chown -R root:root ./build  # Ensure the runner has access to build files
           sudo chmod -R 755 ./build            # Ensure the directory and files are readable and writable
-
-          
 
       # Step 3: Docker for Arch - Build Process
       - name: Docker for Arch
