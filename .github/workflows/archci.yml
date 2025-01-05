@@ -16,6 +16,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
             
+      - name: Cache CMake build and intermediate files
+        uses: actions/cache@v4
+        with:
+          path: |
+            ./build  # Cache the entire build directory
+          key: ${{ runner.os }}-kronos-build-${{ hashFiles('**/*.cpp', '**/*.h', '**/CMakeLists.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-kronos-build-  
+  
       - name: Docker for Arch
         run: |
           docker pull archlinux:base-devel
