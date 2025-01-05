@@ -36,14 +36,13 @@ jobs:
               pacman -Syu --noconfirm &&
               pacman -S --noconfirm \
                 cmake \
-                ninja \
                 qt5-base \
                 qt5-multimedia \
                 openal \
                 sdl2 \
                 glu &&
               mkdir -p build out &&
-              cmake -G "Unix Makefiles" -S ./yabause -B ./build \
+              cmake -G 'Unix Makefiles' -S ./yabause -B ./build \
                 -DCMAKE_INSTALL_PREFIX='./out' \
                 -DCMAKE_BUILD_TYPE=Release \
                 -DYAB_USE_QT5=ON \
