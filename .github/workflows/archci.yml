@@ -16,12 +16,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Step 1: Ensure build directory exists
+      # Step 1: Ensure build directory exists (make sure it's created)
       - name: Ensure build directory exists
         run: |
-          mkdir -p ./build  # Create the build directory if it doesn't already exist
+          mkdir -p ./build
 
-      # Step 2: Docker for Arch - Build Process (this step will populate ./build)
+      # Step 2: Cache CMake build and intermediate files (restore from cache before build)
+      - name: Cache CMake build and intermediate files (restore)
+        uses: actions/cache@v4
+        with:
+          path: ./build  # Cache the build directory
+          key: ${{ runner.os }}-kronos-build-${{ hashFiles('**/*.cpp', '**/*.h', '**/CMakeLists.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-kronos-build-
+
+      # Step 3: Docker for Arch - Build Process
       - name: Docker for Arch
         run: |
           docker pull archlinux:base-devel
@@ -48,19 +57,23 @@ jobs:
               ninja -C ./build && ninja -C ./build install
             "
 
-      # Step 3: Cache CMake build and intermediate files (now this step happens after the build)
-      - name: Cache CMake build and intermediate files
+      # Step 4: Check if the build directory was populated (this step is just for debugging)
+      - name: Check build directory contents
+        run: |
+          ls -l ./build  # Check if build files exist after Docker run
+
+      # Step 5: Cache CMake build and intermediate files (save the cache after the build)
+      - name: Cache CMake build and intermediate files (save)
         uses: actions/cache@v4
         with:
-          path: |
-            ./build  # Cache the entire build directory (after the build has populated it)
+          path: ./build  # Cache the build directory after the build step
           key: ${{ runner.os }}-kronos-build-${{ hashFiles('**/*.cpp', '**/*.h', '**/CMakeLists.txt') }}
           restore-keys: |
             ${{ runner.os }}-kronos-build-
 
-      # Step 4: Upload build artifact
+      # Step 6: Upload build artifact
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: kronos-artifact 
+          name: kronos-artifact
           path: ./out/
