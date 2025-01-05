@@ -33,7 +33,7 @@ jobs:
                 openal \
                 sdl2 \
                 glu &&
-              mkdir build && mkdir out &&
+              mkdir -p build out &&
               cmake -G Ninja -S ./yabause -B ./build \
                 -DCMAKE_INSTALL_PREFIX="./out" \
                 -DCMAKE_BUILD_TYPE=Release \
