@@ -2,10 +2,10 @@ on:
   workflow_dispatch:
   push:
     branches:
-    - extui-align
+      - extui-align
   pull_request:
     branches:
-    - extui-align
+      - extui-align
 
 jobs:
   build:
@@ -15,20 +15,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
+
+      # Step 1: Ensure build directory exists
       - name: Ensure build directory exists
         run: |
           mkdir -p ./build  # Create the build directory if it doesn't already exist
-      
-      - name: Cache CMake build and intermediate files
-        uses: actions/cache@v4
-        with:
-          path: |
-            ./build  # Cache the entire build directory
-          key: ${{ runner.os }}-kronos-build-${{ hashFiles('**/*.cpp', '**/*.h', '**/CMakeLists.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-kronos-build-  
-      
+
+      # Step 2: Docker for Arch - Build Process (this step will populate ./build)
       - name: Docker for Arch
         run: |
           docker pull archlinux:base-devel
@@ -48,35 +41,26 @@ jobs:
                 glu &&
               mkdir -p build out &&
               cmake -G Ninja -S ./yabause -B ./build \
-                -DCMAKE_INSTALL_PREFIX="./out" \
+                -DCMAKE_INSTALL_PREFIX='./out' \
                 -DCMAKE_BUILD_TYPE=Release \
                 -DYAB_USE_QT5=ON \
               &&
               ninja -C ./build && ninja -C ./build install
             "
-            
+
+      # Step 3: Cache CMake build and intermediate files (now this step happens after the build)
       - name: Cache CMake build and intermediate files
         uses: actions/cache@v4
         with:
           path: |
-            ./build  # Cache the entire build directory
+            ./build  # Cache the entire build directory (after the build has populated it)
           key: ${{ runner.os }}-kronos-build-${{ hashFiles('**/*.cpp', '**/*.h', '**/CMakeLists.txt') }}
           restore-keys: |
-            ${{ runner.os }}-kronos-build-    
-            
-#      - name: Compress the output directory
-#        run: |
-#          # Compress the 'out' directory into a .tar.gz archive
-#          tar -czvf out.tar.gz -C ./out .
+            ${{ runner.os }}-kronos-build-
 
-#      - name: Upload build artifact
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: build-artifacts
-#          path: out.tar.gz  # Upload the compressed tarball
-      
+      # Step 4: Upload build artifact
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: kronos-artifact 
-          path: ./out/ 
+          path: ./out/
