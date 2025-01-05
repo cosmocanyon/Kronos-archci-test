@@ -24,7 +24,7 @@ jobs:
             build/**/*    
           key: ${{ runner.os }}-build-${{ hashFiles('CMakeLists.txt', '**/CMakeLists.txt') }}  # Use CMake files or other build system files as the cache key
           restore-keys: |
-            ${{ runner.os }}-build-
+            ${{ runner.os }}-build-ninja-
 
       - name: Docker for Arch
         run: |
