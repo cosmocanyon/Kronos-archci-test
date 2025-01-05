@@ -15,6 +15,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      # Step 1: Ensure the ./build folder exists
+      - name: Ensure build directory exists
+        run: |
+          mkdir -p ./build  # Create the build directory if it doesn't already exist
+        
+      - name: Cache CMake build and intermediate files
+        uses: actions/cache@v4
+        with:
+          path: |
+            ./build  # Cache the entire build directory
+          key: ${{ runner.os }}-kronos-build-${{ hashFiles('**/*.cpp', '**/*.h', '**/CMakeLists.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-kronos-build-  
             
       - name: Docker for Arch
         run: |
@@ -41,15 +55,6 @@ jobs:
               &&
               ninja -C ./build && ninja -C ./build install
             "
-
-      - name: Cache CMake build and intermediate files
-        uses: actions/cache@v4
-        with:
-          path: |
-            ./build  # Cache the entire build directory
-          key: ${{ runner.os }}-kronos-build-${{ hashFiles('**/*.cpp', '**/*.h', '**/CMakeLists.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-kronos-build-  
             
 #      - name: Compress the output directory
 #        run: |
