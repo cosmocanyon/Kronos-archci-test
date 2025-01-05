@@ -16,22 +16,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Cache pacman dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pacman/pkg
-          key: pacman-cache-${{ runner.os }}-${{ hashFiles('**/PKGBUILD') }}
-          restore-keys: |
-            pacman-cache-${{ runner.os }}-
-
-      - name: Cache build directory
-        uses: actions/cache@v4
-        with:
-          path: ./build
-          key: build-cache-${{ runner.os }}-${{ hashFiles('**/CMakeLists.txt') }}
-          restore-keys: |
-            build-cache-${{ runner.os }}-
-
       - name: Docker for Arch
         run: |
           docker pull archlinux:base-devel
@@ -39,25 +23,37 @@ jobs:
             -v $PWD:/workspace \
             -w /workspace \
             archlinux:base-devel bash -c "
-              pacman -Sy --noconfirm cmake ninja qt5-base qt5-multimedia openal sdl2 glu &&
-              
-              if [ ! -d "./build" ]; then
-                mkdir ./build
-              fi
-              
-              if [ ! -d "./out" ]; then
-                mkdir ./out
-              fi
-                           
+              pacman -Syu --noconfirm &&
+              pacman -S --noconfirm \
+                cmake \
+                ninja \
+                qt5-base \
+                qt5-multimedia \
+                openal \
+                sdl2 \
+                glu &&
+              mkdir build && mkdir out &&
               cmake -G Ninja -S ./yabause -B ./build \
-                -DCMAKE_INSTALL_PREFIX='./out' \
+                -DCMAKE_INSTALL_PREFIX="./out" \
                 -DCMAKE_BUILD_TYPE=Release \
-                -DYAB_USE_QT5=ON &&
+                -DYAB_USE_QT5=ON \
+              &&
               ninja -C ./build && ninja -C ./build install
             "
+            
+#      - name: Compress the output directory
+#        run: |
+#          # Compress the 'out' directory into a .tar.gz archive
+#          tar -czvf out.tar.gz -C ./out .
+
+#      - name: Upload build artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: build-artifacts
+#          path: out.tar.gz  # Upload the compressed tarball
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: kronos-artifact
-          path: ./out/
+          name: kronos-artifact 
+          path: ./out/ 
