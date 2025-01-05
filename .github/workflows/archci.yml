@@ -39,6 +39,7 @@ jobs:
             -v $PWD/build:/workspace/build \
             -w /workspace \
             archlinux:base-devel bash -c "
+              ls -l ./build  # Check if build files exist after Docker run
               pacman -Syu --noconfirm &&
               pacman -S --noconfirm \
                 cmake \
