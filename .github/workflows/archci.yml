@@ -16,32 +16,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Step 1: Ensure build directory exists (make sure it's created)
-      - name: Ensure build directory exists
-        run: |
-          mkdir -p ./build
-
-      # Step 2: Cache CMake build and intermediate files (restore from cache before build)
-      - name: Cache CMake build and intermediate files (restore)
-        uses: actions/cache@v4
-        with:
-          path: ./build  # Cache the build directory
-          key: ${{ runner.os }}-kronos-build-${{ hashFiles('**/*.cpp', '**/*.h', '**/CMakeLists.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-kronos-build-
-      
-      - name: Fix permissions for build directory (after cache restore)
-        run: |
-          sudo chown -R root:root ./build  # Ensure the runner has access to build files
-          sudo chmod -R 755 ./build            # Ensure the directory and files are readable and writable
-
-      # Step 3: Docker for Arch - Build Process
       - name: Docker for Arch
         run: |
           docker pull archlinux:base-devel
           docker run --rm \
             -v $PWD:/workspace \
-            -v $PWD/build:/workspace/build \
             -w /workspace \
             archlinux:base-devel bash -c "
               pacman -Syu --noconfirm &&
@@ -61,11 +40,6 @@ jobs:
               &&
               ninja -C ./build && ninja -C ./build install
             "
-
-      # Step 4: Check if the build directory was populated (this step is just for debugging)
-      - name: Check build directory contents
-        run: |
-          ls -l ./build  # Check if build files exist after Docker run
 
       # Step 6: Upload build artifact
       - name: Upload build artifact
