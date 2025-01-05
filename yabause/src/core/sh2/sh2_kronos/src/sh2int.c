@@ -445,7 +445,6 @@ int SH2KronosInterpreterDebugInit(void)
   SH2SetExecSet(1);
   return ret;
 }
-
 //////////////////////////////////////////////////////////////////////////////
 
 void SH2KronosInterpreterDeInit(void)
