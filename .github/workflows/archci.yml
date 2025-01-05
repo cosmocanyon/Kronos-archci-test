@@ -21,7 +21,7 @@ jobs:
           docker pull archlinux:base-devel
           docker run --rm \
             -v $PWD:/workspace \
-            -v $PWD/build:/workspace/build \  # Mount the build directory to persist it
+            -v $PWD/build:/workspace/build \
             -w /workspace \
             archlinux:base-devel bash -c "
               pacman -Syu --noconfirm &&
