@@ -22,12 +22,9 @@ jobs:
           # Cache the entire build folder and .hide files
           path: |
             build/**/*    
-          key: ${{ runner.os }}-build-ninja-${{ hashFiles('CMakeLists.txt', '**/CMakeLists.txt', '**/*.cpp', '**/*.h') }}  # Use CMake files or other build system files as the cache key
+          key: ${{ runner.os }}-build-${{ hashFiles('CMakeLists.txt', '**/CMakeLists.txt', '**/*.cpp', '**/*.h') }}  # Use CMake files or other build system files as the cache key
           restore-keys: |
-            ${{ runner.os }}-build-ninja-
-      
-      - name: List build directory after cache restore
-        run: ls -R build/
+            ${{ runner.os }}-build-
 
       - name: Docker for Arch
         run: |
@@ -49,12 +46,15 @@ jobs:
                 sdl2 \
                 glu &&
               mkdir -p build out &&
-              cmake -G Ninja -S ./yabause -B ./build \
+              cmake -G 'Unix Makefiles' -S ./yabause -B ./build \
                 -DCMAKE_INSTALL_PREFIX='./out' \
                 -DCMAKE_BUILD_TYPE=Release \
                 -DYAB_USE_QT5=ON \
               &&
-              ninja -C ./build && ninja -C ./build install
+              make -C ./build && make -C ./build install
+              
+              #cmake -G Ninja -S ./yabause -B ./build \
+              #ninja -C ./build && ninja -C ./build install
             "
 
       # Step 6: Upload build artifact
