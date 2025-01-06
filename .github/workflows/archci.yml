@@ -33,7 +33,7 @@ jobs:
         if: steps.cache-build.outputs.cache-hit == 'true'
         run: |
           sudo chown -R root:root ./build  
-          sudo chmod -R 755 ./build
+          sudo chmod -R 777 ./build
           echo "CACHE_BUILD=true" >> $GITHUB_ENV
 
       - name: Check CACHE_BUILD in next step
