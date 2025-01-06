@@ -46,8 +46,10 @@ jobs:
                 sdl2 \
                 glu \
                 ccache &&
-
+              
               mkdir -p build out &&
+              
+              export PATH=/usr/lib/ccache:$PATH && 
 
               cmake -G Ninja -S ./yabause -B ./build \
                 -DCMAKE_INSTALL_PREFIX='./out' \
