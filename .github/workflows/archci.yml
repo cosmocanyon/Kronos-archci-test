@@ -34,13 +34,11 @@ jobs:
         run: |
           sudo chown -R root:root ./build  
           sudo chmod -R 755 ./build
-          echo "$CACHE_BUILD"
           echo "CACHE_BUILD=true" >> $GITHUB_ENV
-          echo "$CACHE_BUILD"
 
       - name: Check CACHE_BUILD in next step
         run: |
-          echo "$CACHE_BUILD"  # This will print 'true' because the previous step updated it via $GITHUB_ENV
+          echo "CACHE_BUILD value: $CACHE_BUILD"  # This will print 'true' because the previous step updated it via $GITHUB_ENV
     
       - name: Docker for Arch
         run: |
@@ -63,7 +61,7 @@ jobs:
                 glu &&
               mkdir -p build out &&
               
-              echo "\$CACHE_BUILD"
+              echo "CACHE_BUILD value: \$CACHE_BUILD"
               
               if [ "\$CACHE_BUILD" == "false" ]; then
                 cmake -G Ninja -S ./yabause -B ./build \
