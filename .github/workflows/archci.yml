@@ -47,6 +47,7 @@ jobs:
             -v $GITHUB_WORKSPACE/.ccache:/workspace/.ccache \
             -w /workspace \
             -e CACHE_BUILD=$CACHE_BUILD \
+            -e CCACHE_DIR=/workspace/.ccache \
             archlinux:base-devel bash -c "
               ls -la
              
