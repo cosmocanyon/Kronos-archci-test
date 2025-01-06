@@ -11,6 +11,8 @@ jobs:
   build:
     name: deploy standalone build for arch-linux
     runs-on: ubuntu-latest
+    env:
+      CACHE_BUILD: false
 
     steps:
       - name: Checkout
@@ -31,7 +33,8 @@ jobs:
         if: steps.cache-build.outputs.cache-hit == 'true'
         run: |
           sudo chown -R root:root ./build  
-          sudo chmod -R 755 ./build            
+          sudo chmod -R 755 ./build    
+          CACHE_BUILD = true
 
       - name: Docker for Arch
         run: |
@@ -52,11 +55,14 @@ jobs:
                 sdl2 \
                 glu &&
               mkdir -p build out &&
-              cmake -G Ninja -S ./yabause -B ./build \
-                -DCMAKE_INSTALL_PREFIX='./out' \
-                -DCMAKE_BUILD_TYPE=Release \
-                -DYAB_USE_QT5=ON \
-              &&
+
+              if [ "\$CACHE_BUILD" == "false"]; then
+                cmake -G Ninja -S ./yabause -B ./build \
+                  -DCMAKE_INSTALL_PREFIX='./out' \
+                  -DCMAKE_BUILD_TYPE=Release \
+                  -DYAB_USE_QT5=ON \
+                &&
+              fi
     
               ninja -C ./build && ninja -C ./build install
             "
