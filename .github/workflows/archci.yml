@@ -30,7 +30,9 @@ jobs:
         run: |
           docker pull archlinux:base-devel
           docker run --rm \
-            -v $PWD:/workspace \
+            -v $GITHUB_WORKSPACE:/workspace \
+            -v $GITHUB_WORKSPACE/build:/workspace/build \
+            -v $GITHUB_WORKSPACE/out:/workspace/out \
             -w /workspace \
             archlinux:base-devel bash -c "
               pacman -Syu --noconfirm &&
