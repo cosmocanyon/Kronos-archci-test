@@ -57,7 +57,7 @@ jobs:
                 glu &&
               mkdir -p build out &&
 
-              if [ "\$CACHE_BUILD" == "false"]; then
+              if [ "\$CACHE_BUILD" == "false" ]; then
                 cmake -G Ninja -S ./yabause -B ./build \
                   -DCMAKE_INSTALL_PREFIX='./out' \
                   -DCMAKE_BUILD_TYPE=Release \
