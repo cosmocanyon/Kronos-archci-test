@@ -35,7 +35,6 @@ jobs:
             -v $GITHUB_WORKSPACE/out:/workspace/out \
             -w /workspace \
             archlinux:base-devel bash -c "
-              ls -R build/
               pacman -Syu --noconfirm &&
               pacman -S --noconfirm \
                 cmake \
