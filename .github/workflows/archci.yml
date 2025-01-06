@@ -18,6 +18,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Cache build files
+        id: cache-build
+        uses: actions/cache@v4
+        with:
+          # Cache the entire build folder and .hide files
+          path: |
+            build/**/*    
+          key: ${{ runner.os }}-build-${{ hashFiles('CMakeLists.txt', '**/CMakeLists.txt', '**/*.cpp', '**/*.h') }} 
+          restore-keys: |
+            ${{ runner.os }}-build-
+
       # Cache ccache directory
       - name: Cache ccache directory
         id: cache-ccache
@@ -28,8 +39,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-ccache-
 
-      - name: cache restore
-        if: steps.cache-ccache.outputs.cache-hit == 'true'
+      - name: cache-build restore
+        if: steps.cache-build.outputs.cache-hit == 'true'
         run: |
           echo "CACHE_BUILD=true" >> $GITHUB_ENV
 
