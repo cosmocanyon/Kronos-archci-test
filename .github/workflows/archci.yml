@@ -17,6 +17,7 @@ jobs:
         uses: actions/checkout@v4
   
       - name: Cache build files
+        id: cache-build
         uses: actions/cache@v4
         with:
           # Cache the entire build folder and .hide files
@@ -27,6 +28,7 @@ jobs:
             ${{ runner.os }}-build-
 
       - name: Fix permissions for build directory (after cache restore)
+        if: steps.cache-build.outputs.cache-hit != 'true'
         run: |
           sudo chown -R root:root ./build  
           sudo chmod -R 755 ./build            
