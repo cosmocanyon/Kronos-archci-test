@@ -26,6 +26,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-build-
 
+      - name: Fix permissions for build directory (after cache restore)
+        run: |
+          sudo chown -R root:root ./build  # Ensure the runner has access to build files
+          sudo chmod -R 755 ./build            # Ensure the directory and files are readable and writable
+
       - name: Docker for Arch
         run: |
           docker pull archlinux:base-devel
