@@ -15,9 +15,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: List build directory before cache restore
-        run: ls -R build/
   
       - name: Cache build files
         uses: actions/cache@v4
