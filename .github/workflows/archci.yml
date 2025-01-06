@@ -28,7 +28,7 @@ jobs:
             ${{ runner.os }}-build-
 
       - name: Fix permissions for build directory (after cache restore)
-        if: steps.cache-build.outputs.cache-hit != 'true'
+        if: steps.cache-build.outputs.cache-hit == 'true'
         run: |
           sudo chown -R root:root ./build  
           sudo chmod -R 755 ./build            
