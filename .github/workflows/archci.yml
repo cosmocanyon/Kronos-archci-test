@@ -11,23 +11,10 @@ jobs:
   build:
     name: deploy standalone build for arch-linux
     runs-on: ubuntu-latest
-    env:
-      CACHE_BUILD: false
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Cache build files
-        id: cache-build
-        uses: actions/cache@v4
-        with:
-          # Cache the entire build folder and .hide files
-          path: |
-            build/**/*    
-          key: ${{ runner.os }}-build-${{ hashFiles('CMakeLists.txt', '**/CMakeLists.txt', '**/*.cpp', '**/*.h') }} 
-          restore-keys: |
-            ${{ runner.os }}-build-
 
       # Cache ccache directory
       - name: Cache ccache directory
@@ -38,26 +25,14 @@ jobs:
           key: ${{ runner.os }}-ccache-${{ hashFiles('CMakeLists.txt', '**/CMakeLists.txt', '**/*.cpp', '**/*.h') }}
           restore-keys: |
             ${{ runner.os }}-ccache-
-
-      - name: cache-build restore
-        if: steps.cache-build.outputs.cache-hit == 'true'
-        run: |
-          echo "CACHE_BUILD=true" >> $GITHUB_ENV
-
-      - name: Check CACHE_BUILD in next step
-        run: |
-          echo "CACHE_BUILD value: $CACHE_BUILD"
     
       - name: Docker for Arch
         run: |
           docker pull archlinux:base-devel
           docker run --rm \
             -v $GITHUB_WORKSPACE:/workspace \
-            -v $GITHUB_WORKSPACE/build:/workspace/build \
-            -v $GITHUB_WORKSPACE/out:/workspace/out \
             -v $GITHUB_WORKSPACE/.ccache:/workspace/.ccache \
             -w /workspace \
-            -e CACHE_BUILD=$CACHE_BUILD \
             -e CCACHE_DIR=/workspace/.ccache \
             archlinux:base-devel bash -c "
              
@@ -79,16 +54,11 @@ jobs:
 
               mkdir -p build out &&
 
-              echo \"CACHE_BUILD value: \$CACHE_BUILD\"
+              cmake -G Ninja -S ./yabause -B ./build \
+                -DCMAKE_INSTALL_PREFIX='./out' \
+                -DCMAKE_BUILD_TYPE=Release \
+                -DYAB_USE_QT5=ON
 
-              # Run cmake and build
-              if [ "\$CACHE_BUILD" == "false" ]; then
-                cmake -G Ninja -S ./yabause -B ./build \
-                  -DCMAKE_INSTALL_PREFIX='./out' \
-                  -DCMAKE_BUILD_TYPE=Release \
-                  -DYAB_USE_QT5=ON
-              fi
-    
               ninja -C ./build && ninja -C ./build install
             "
 
