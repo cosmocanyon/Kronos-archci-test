@@ -16,6 +16,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: List build directory before cache restore
+        run: ls -R build/
+  
       - name: Cache build files
         uses: actions/cache@v4
         with:
@@ -25,6 +28,9 @@ jobs:
           key: ${{ runner.os }}-build-ninja-${{ hashFiles('CMakeLists.txt', '**/CMakeLists.txt', '**/*.cpp', '**/*.h') }}  # Use CMake files or other build system files as the cache key
           restore-keys: |
             ${{ runner.os }}-build-ninja-
+      
+      - name: List build directory after cache restore
+        run: ls -R build/
 
       - name: Docker for Arch
         run: |
@@ -52,6 +58,9 @@ jobs:
               &&
               ninja -C ./build && ninja -C ./build install
             "
+
+      - name: List build directory after Docker
+        run: ls -R build/
 
       # Step 6: Upload build artifact
       - name: Upload build artifact
