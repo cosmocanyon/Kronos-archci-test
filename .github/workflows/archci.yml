@@ -61,7 +61,7 @@ jobs:
                 glu &&
               mkdir -p build out &&
               
-              echo "CACHE_BUILD value: \$CACHE_BUILD"
+              echo \"CACHE_BUILD value: \$CACHE_BUILD\"
               
               if [ "\$CACHE_BUILD" == "false" ]; then
                 cmake -G Ninja -S ./yabause -B ./build \
