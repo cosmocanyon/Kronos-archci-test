@@ -61,8 +61,7 @@ jobs:
                 cmake -G Ninja -S ./yabause -B ./build \
                   -DCMAKE_INSTALL_PREFIX='./out' \
                   -DCMAKE_BUILD_TYPE=Release \
-                  -DYAB_USE_QT5=ON \
-                &&
+                  -DYAB_USE_QT5=ON
               fi
     
               ninja -C ./build && ninja -C ./build install
