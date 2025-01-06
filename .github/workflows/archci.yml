@@ -17,17 +17,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-  
-      - name: Cache build files
-        id: cache-build
+
+      # Cache ccache directory
+      - name: Cache ccache directory
+        id: cache-ccache
         uses: actions/cache@v4
         with:
-          # Cache the entire build folder and .hide files
-          path: |
-            build/**/*    
-          key: ${{ runner.os }}-build-${{ hashFiles('CMakeLists.txt', '**/CMakeLists.txt', '**/*.cpp', '**/*.h') }} 
+          path: ~/.ccache
+          key: ${{ runner.os }}-ccache-${{ hashFiles('CMakeLists.txt', '**/CMakeLists.txt', '**/*.cpp', '**/*.h') }}
           restore-keys: |
-            ${{ runner.os }}-build-
+            ${{ runner.os }}-ccache-
 
       - name: Fix permissions for build directory (after cache restore)
         if: steps.cache-build.outputs.cache-hit == 'true'
@@ -47,9 +46,11 @@ jobs:
             -v $GITHUB_WORKSPACE:/workspace \
             -v $GITHUB_WORKSPACE/build:/workspace/build \
             -v $GITHUB_WORKSPACE/out:/workspace/out \
+            -v $HOME/.ccache:/root/.ccache \
             -w /workspace \
             -e CACHE_BUILD=$CACHE_BUILD \
             archlinux:base-devel bash -c "
+              # Install necessary packages including ccache
               pacman -Syu --noconfirm &&
               pacman -S --noconfirm \
                 cmake \
@@ -58,11 +59,19 @@ jobs:
                 qt5-multimedia \
                 openal \
                 sdl2 \
-                glu &&
+                glu \
+                ccache &&
+
+              # Set ccache configuration
+              export PATH=/usr/lib/ccache:$PATH &&
+              export CC='ccache gcc' &&
+              export CXX='ccache g++' &&
+
               mkdir -p build out &&
-              
+
               echo \"CACHE_BUILD value: \$CACHE_BUILD\"
-              
+
+              # Run cmake and build
               if [ "\$CACHE_BUILD" == "false" ]; then
                 cmake -G Ninja -S ./yabause -B ./build \
                   -DCMAKE_INSTALL_PREFIX='./out' \
