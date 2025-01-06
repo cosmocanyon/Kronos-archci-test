@@ -34,7 +34,7 @@ jobs:
         run: |
           sudo chown -R root:root ./build  
           sudo chmod -R 755 ./build    
-          CACHE_BUILD = true
+          echo "CACHE_BUILD=true" >> $GITHUB_ENV
 
       - name: Docker for Arch
         run: |
@@ -44,6 +44,7 @@ jobs:
             -v $GITHUB_WORKSPACE/build:/workspace/build \
             -v $GITHUB_WORKSPACE/out:/workspace/out \
             -w /workspace \
+            -e CACHE_BUILD=$CACHE_BUILD \
             archlinux:base-devel bash -c "
               pacman -Syu --noconfirm &&
               pacman -S --noconfirm \
