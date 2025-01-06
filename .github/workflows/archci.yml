@@ -49,13 +49,12 @@ jobs:
               
               mkdir -p build out &&
               
-              export PATH=/usr/lib/ccache:$PATH && 
+              export CC='ccache gcc' &&
+              export CXX='ccache g++' &&
 
               cmake -G Ninja -S ./yabause -B ./build \
                 -DCMAKE_INSTALL_PREFIX='./out' \
                 -DCMAKE_BUILD_TYPE=Release \
-                -DCMAKE_C_COMPILER="gcc" \
-                -DCMAKE_CXX_COMPILER="g++" \
                 -DYAB_USE_QT5=ON
 
               ninja -C ./build && ninja -C ./build install
