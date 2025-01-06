@@ -52,8 +52,8 @@ jobs:
               cmake -G Ninja -S ./yabause -B ./build \
                 -DCMAKE_INSTALL_PREFIX='./out' \
                 -DCMAKE_BUILD_TYPE=Release \
-                -DCMAKE_C_COMPILER="gcc" \
-                -DCMAKE_CXX_COMPILER="g++" \
+                -DCMAKE_C_COMPILER="ccache gcc" \
+                -DCMAKE_CXX_COMPILER="ccache g++" \
                 -DYAB_USE_QT5=ON
 
               ninja -C ./build && ninja -C ./build install
