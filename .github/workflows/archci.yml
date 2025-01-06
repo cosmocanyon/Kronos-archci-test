@@ -38,7 +38,7 @@ jobs:
 
       - name: Check CACHE_BUILD in next step
         run: |
-          echo "CACHE_BUILD value: $CACHE_BUILD"  # This will print 'true' because the previous step updated it via $GITHUB_ENV
+          echo "CACHE_BUILD value: $CACHE_BUILD"
     
       - name: Docker for Arch
         run: |
