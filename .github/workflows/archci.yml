@@ -9,14 +9,14 @@ on:
 
 jobs:
   build:
-    name: deploy standalone build for arch-linux
+    name: Deploy standalone build for arch-linux
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Cache ccache directory
+      # cache ccache directory
       - name: Cache ccache directory
         id: cache-ccache
         uses: actions/cache@v4
@@ -26,7 +26,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-ccache-
     
-      - name: Docker for Arch
+      - name: Docker for arch-linux
         run: |
           docker pull archlinux:base-devel
           docker run --rm \
@@ -38,14 +38,7 @@ jobs:
              
               pacman -Syu --noconfirm &&
               pacman -S --noconfirm \
-                cmake \
-                ninja \
-                qt5-base \
-                qt5-multimedia \
-                openal \
-                sdl2 \
-                glu \
-                ccache &&
+                cmake ninja qt5-base qt5-multimedia openal sdl2 glu ccache &&
               
               mkdir -p build out &&
               
@@ -60,7 +53,7 @@ jobs:
               ninja -C ./build && ninja -C ./build install
             "
 
-      # Step 6: Upload build artifact
+      # upload build artifact
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
